@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
+
+
+<AnchorPane prefHeight="700.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.juegos.Controllers.TablaController">
+   <children>
+      <TableView fx:id="tablaJuegos" layoutX="38.0" layoutY="79.0" prefHeight="526.0" prefWidth="579.0">
+        <columns>
+          <TableColumn fx:id="columnaTitulo" prefWidth="150.13335037231445" text="Título" />
+          <TableColumn fx:id="columnaGenero" minWidth="0.0" prefWidth="146.6667022705078" text="Género" />
+            <TableColumn fx:id="columnaPrecio" prefWidth="102.66665649414062" text="Precio" />
+            <TableColumn fx:id="columnaFecha" prefWidth="185.333251953125" text="Fecha de lanzamiento" />
+        </columns>
+      </TableView>
+   </children>
+</AnchorPane>
