@@ -2,6 +2,7 @@ package org.example.juegos.Models;
 
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
 import org.bson.Document;
 
@@ -56,14 +57,26 @@ public class Juegos {
         this.fecha = fecha;
     }
 
-    public void obtenerJuegos() {
+    public ArrayList<Juegos> obtenerJuegos() {
+        ArrayList<Juegos> juegos = new ArrayList<>();
         MongoDatabase database = ConexionBD.conexion();
         try {
             MongoCollection<Document> coleccionJuegos = database.getCollection("juegos");
-            FindIterable<Document> documentos = coleccionJuegos.find();
+            MongoCursor<Document> cursor = coleccionJuegos.find().iterator();
+            while (cursor.hasNext()) {
+                Document documento = cursor.next();
+                System.out.println(documento.toJson());
+                String titulo = documento.getString("titulo");
+                String genero = documento.getString("genero");
+                Double precio = documento.getDouble("precio");
+                String fecha = documento.getString("fecha_lanzamiento");
+                juegos.add(new Juegos(titulo, genero, precio, fecha));
+            }
+
         } catch (Exception error) {
             System.out.println(error.getMessage());
         }
+        return juegos;
     }
 
 }

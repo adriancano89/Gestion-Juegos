@@ -14,8 +14,8 @@ public class ConexionBD {
 
     public static MongoDatabase conexion() {
         MongoDatabase database = null;
-        try (MongoClient mongoClient = MongoClients.create(host)) {
-
+        try {
+            MongoClient mongoClient = MongoClients.create(host);
             database = mongoClient.getDatabase("adrian");
             System.out.println("Estás conectado");
 
