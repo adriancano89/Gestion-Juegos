@@ -4,9 +4,13 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
 import org.example.juegos.Models.ConexionBD;
 import org.example.juegos.Models.Juegos;
 
@@ -22,6 +26,17 @@ public class TablaController implements Initializable {
     @FXML private TableColumn<Juegos, String> columnaGenero;
     @FXML private TableColumn<Juegos, Double> columnaPrecio;
     @FXML private TableColumn<Juegos, String> columnaFecha;
+    @FXML private VBox formulario;
+    @FXML private Text tituloFormulario;
+    @FXML private TextField inputTitulo;
+    @FXML private TextField inputGenero;
+    @FXML private TextField inputPrecio;
+    @FXML private TextField inputFecha;
+    @FXML private Button btnRegistrar;
+    @FXML private Button btnAnadir;
+    @FXML private Button btnGuardar;
+    @FXML private Text mensajeError;
+
 
     public void mostrarJuegos() {
         ArrayList<Juegos> juegos = modeloJuegos.obtenerJuegos();
@@ -35,10 +50,56 @@ public class TablaController implements Initializable {
         tablaJuegos.setItems(datosJuegos);
     }
 
+    public void registrarJuego() {
+
+    }
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         if (tablaJuegos != null) {
             mostrarJuegos();
+            btnAnadir.setOnAction(event -> {
+                if (tituloFormulario.getText().equals("REGISTRAR JUEGO")) {
+                    if (inputTitulo.getText().isBlank()) {
+                        mensajeError.setText("El título no puede estar vacío");
+                        mensajeError.setVisible(true);
+                    }
+                    else {
+                        long numCoincidencias = modeloJuegos.comprobarTitulo(inputTitulo.getText());
+                        if (numCoincidencias > 0) {
+                            mensajeError.setText("No puede haber dos juegos con el mismo título.");
+                            mensajeError.setVisible(true);
+                        }
+                        else {
+                            modeloJuegos.registrarNuevoJuego(new Juegos(inputTitulo.getText(), inputGenero.getText(), Double.parseDouble(inputPrecio.getText()), inputFecha.getText()));
+                            mostrarJuegos();
+                        }
+                    }
+                }
+            });
+            tablaJuegos.getSelectionModel().selectedItemProperty().addListener((observable, oldSelection, newSelection) -> {
+                if (newSelection != null) {
+                    Juegos juegoSeleccionado = newSelection;
+                    System.out.println(juegoSeleccionado.getTitulo());
+                    tituloFormulario.setText("EDITAR JUEGO");
+                    inputTitulo.setText(juegoSeleccionado.getTitulo());
+                    inputGenero.setText(juegoSeleccionado.getGenero());
+                    inputPrecio.setText(String.valueOf(juegoSeleccionado.getPrecio()));
+                    inputFecha.setText(juegoSeleccionado.getFecha());
+                    btnRegistrar.setVisible(true);
+                    btnAnadir.setVisible(false);
+                    btnGuardar.setVisible(true);
+                }
+            });
+            btnRegistrar.setOnAction(event -> {
+                tituloFormulario.setText("REGISTRAR JUEGO");
+                inputTitulo.setText("");
+                inputGenero.setText("");
+                inputPrecio.setText("");
+                inputFecha.setText("");
+                btnGuardar.setVisible(false);
+                btnAnadir.setVisible(true);
+            });
         }
     }
 }

@@ -6,6 +6,7 @@ import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
 import org.bson.Document;
 
+import javax.print.Doc;
 import java.util.ArrayList;
 
 public class Juegos {
@@ -72,11 +73,37 @@ public class Juegos {
                 String fecha = documento.getString("fecha_lanzamiento");
                 juegos.add(new Juegos(titulo, genero, precio, fecha));
             }
-
+            ConexionBD.getMongoClient().close();
         } catch (Exception error) {
             System.out.println(error.getMessage());
         }
         return juegos;
+    }
+
+    public void registrarNuevoJuego(Juegos juego) {
+        MongoDatabase database = ConexionBD.conexion();
+        try {
+            MongoCollection<Document> coleccionJuegos = database.getCollection("juegos");
+            Document documento = new Document("titulo", juego.getTitulo()).append("genero", juego.getGenero()).append("precio", juego.getPrecio()).append("fecha_lanzamiento", juego.getFecha());
+            coleccionJuegos.insertOne(documento);
+            ConexionBD.getMongoClient().close();
+        } catch (Exception error) {
+            System.out.println(error.getMessage());
+        }
+    }
+
+    public long comprobarTitulo(String titulo) {
+        MongoDatabase database = ConexionBD.conexion();
+        long numRegistros = 0;
+        try {
+            MongoCollection<Document> coleccionJuegos = database.getCollection("juegos");
+            Document consulta = new Document("titulo", titulo);
+            numRegistros = coleccionJuegos.countDocuments(consulta);
+            ConexionBD.getMongoClient().close();
+        } catch (Exception error) {
+            System.out.println(error.getMessage());
+        }
+        return numRegistros;
     }
 
 }

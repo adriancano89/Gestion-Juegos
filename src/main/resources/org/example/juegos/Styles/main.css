@@ -1,0 +1,7 @@
+.fondo {
+    -fx-background-color: #D6EAF8;
+}
+
+.cursorPointer {
+    -fx-cursor: hand;
+}

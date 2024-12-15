@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane prefHeight="700.0" prefWidth="1200.0" styleClass="fondo" stylesheets="@../Styles/main.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.juegos.Controllers.TablaController">
+   <children>
+      <TableView fx:id="tablaJuegos" layoutX="60.0" layoutY="78.0" prefHeight="526.0" prefWidth="674.0">
+        <columns>
+          <TableColumn fx:id="columnaTitulo" prefWidth="190.40002822875977" text="Título" />
+          <TableColumn fx:id="columnaGenero" minWidth="0.0" prefWidth="169.59996032714844" text="Género" />
+            <TableColumn fx:id="columnaPrecio" prefWidth="129.5999755859375" text="Precio" />
+            <TableColumn fx:id="columnaFecha" prefWidth="193.60003662109375" text="Fecha de lanzamiento" />
+        </columns>
+      </TableView>
+      <Button fx:id="btnRegistrar" layoutX="893.0" layoutY="84.0" mnemonicParsing="false" styleClass="cursorPointer" text="REGISTRAR NUEVO JUEGO" visible="false" />
+      <VBox fx:id="formulario" alignment="CENTER" layoutX="872.0" layoutY="181.0" prefWidth="200.0" spacing="10.0">
+         <children>
+            <Text fx:id="tituloFormulario" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-size: 17px; -fx-font-weight: bold;" text="REGISTRAR JUEGO">
+               <VBox.margin>
+                  <Insets bottom="10.0" />
+               </VBox.margin></Text>
+            <VBox prefWidth="100.0">
+               <children>
+                  <Label text="Título" />
+                  <TextField fx:id="inputTitulo" />
+               </children>
+            </VBox>
+            <VBox prefWidth="100.0">
+               <children>
+                  <Label text="Género" />
+                  <TextField fx:id="inputGenero" />
+               </children>
+            </VBox>
+            <VBox prefWidth="100.0">
+               <children>
+                  <Label text="Precio" />
+                  <TextField fx:id="inputPrecio" />
+               </children>
+            </VBox>
+            <VBox prefWidth="100.0">
+               <children>
+                  <Label text="Fecha de lanzamiento" />
+                  <TextField fx:id="inputFecha" />
+               </children>
+            </VBox>
+            <Button fx:id="btnAnadir" mnemonicParsing="false" style="-fx-padding: 5px 10px;" styleClass="cursorPointer" text="AÑADIR" />
+            <Button fx:id="btnGuardar" mnemonicParsing="false" styleClass="cursorPointer" text="GUARDAR" visible="false" />
+            <Text fx:id="mensajeError" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-fill: red; -fx-font-size: 15px; -fx-font-weight: bold; -fx-text-alignment: center;" visible="false" wrappingWidth="200.0">
+               <VBox.margin>
+                  <Insets top="10.0" />
+               </VBox.margin>
+            </Text>
+         </children>
+      </VBox>
+   </children>
+</AnchorPane>
