@@ -4,8 +4,10 @@ import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.model.Filters;
 import org.bson.Document;
-
+import static com.mongodb.client.model.Filters.eq;
+import static com.mongodb.client.model.Updates.set;
 import javax.print.Doc;
 import java.util.ArrayList;
 
@@ -85,6 +87,7 @@ public class Juegos {
         try {
             MongoCollection<Document> coleccionJuegos = database.getCollection("juegos");
             Document documento = new Document("titulo", juego.getTitulo()).append("genero", juego.getGenero()).append("precio", juego.getPrecio()).append("fecha_lanzamiento", juego.getFecha());
+            System.out.println("Documento a insertar: " + documento);
             coleccionJuegos.insertOne(documento);
             ConexionBD.getMongoClient().close();
         } catch (Exception error) {
@@ -104,6 +107,20 @@ public class Juegos {
             System.out.println(error.getMessage());
         }
         return numRegistros;
+    }
+
+    public void editarJuego(String titulo, Juegos juego) {
+        MongoDatabase database = ConexionBD.conexion();
+        try {
+            MongoCollection<Document> coleccionJuegos = database.getCollection("juegos");
+            Document consultaEditar = new Document("$set", new Document("titulo", juego.getTitulo()).append("genero", juego.getGenero()).append("precio", juego.getPrecio()).append("fecha_lanzamiento", juego.getFecha()));
+            System.out.println(consultaEditar);
+            Document filtro = new Document("titulo", titulo);
+            coleccionJuegos.updateOne(filtro, consultaEditar);
+            ConexionBD.getMongoClient().close();
+        } catch (Exception error) {
+            System.out.println(error.getMessage());
+        }
     }
 
 }
