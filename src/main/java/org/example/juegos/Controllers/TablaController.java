@@ -4,16 +4,14 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import org.example.juegos.Models.ConexionBD;
 import org.example.juegos.Models.Juegos;
 
+import java.lang.reflect.Array;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,9 +31,12 @@ public class TablaController implements Initializable {
     @FXML private TextField inputGenero;
     @FXML private TextField inputPrecio;
     @FXML private TextField inputFecha;
+    @FXML private ChoiceBox<String> selectGenero;
+    @FXML private Button btnEliminarGenero;
     @FXML private Button btnRegistrar;
     @FXML private Button btnAnadir;
     @FXML private Button btnGuardar;
+    @FXML private Button btnEliminar;
     @FXML private Text mensajeError;
 
     public static Juegos getJuegoSeleccionado() {
@@ -66,10 +67,75 @@ public class TablaController implements Initializable {
         modeloJuegos.editarJuego(titulo, juegoEditar);
     }
 
+    public void eliminarJuego(String titulo) {
+        modeloJuegos.eliminarJuego(titulo);
+    }
+
+    public void mostrarOpcionesSelect() {
+        selectGenero.setValue("Eliminar por género");
+        btnEliminarGenero.setVisible(false);
+        ArrayList<String> generos = modeloJuegos.obtenerGeneros();
+        ObservableList<String> camposSelect = FXCollections.observableList(generos);
+        selectGenero.setItems(camposSelect);
+    }
+
+    public void eliminarPorGenero(String genero) {
+        modeloJuegos.eliminarPorGenero(genero);
+    }
+
+    public void vaciarInputs() {
+        inputTitulo.setText("");
+        inputGenero.setText("");
+        inputPrecio.setText("");
+        inputFecha.setText("");
+    }
+
+    public void mostrarFormRegistrar() {
+        btnRegistrar.setVisible(false);
+        tituloFormulario.setText("REGISTRAR JUEGO");
+        vaciarInputs();
+        btnGuardar.setVisible(false);
+        btnEliminar.setVisible(false);
+        btnAnadir.setVisible(true);
+    }
+
+    public void cargarTablaySelect() {
+        mostrarJuegos();
+        mostrarOpcionesSelect();
+    }
+
+    public boolean mostrarAlertaEliminar(String mensaje) {
+        Alert alertaEliminar = new Alert(Alert.AlertType.CONFIRMATION);
+        alertaEliminar.setTitle("Eliminación");
+        alertaEliminar.setHeaderText("ELIMINACIÓN");
+        alertaEliminar.setContentText(mensaje);
+        alertaEliminar.showAndWait();
+        ButtonType botonSeleccionado = alertaEliminar.getResult();
+        boolean confirmado = botonSeleccionado.getText().equals("Aceptar");
+        return  confirmado;
+    }
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         if (tablaJuegos != null) {
-            mostrarJuegos();
+            cargarTablaySelect();
+            selectGenero.setOnAction(event -> {
+                btnEliminarGenero.setVisible(true);
+            });
+            btnEliminarGenero.setOnAction(event -> {
+                String mensaje;
+                if (selectGenero.getValue().isBlank()) {
+                    mensaje = "¿Deseas eliminar todos los juegos que no tienen género?";
+                }
+                else {
+                    mensaje = "¿Deseas eliminar todos los juegos del género " + selectGenero.getValue() + "?";
+                }
+                boolean confirmacion = mostrarAlertaEliminar(mensaje);
+                if (confirmacion) {
+                    eliminarPorGenero(selectGenero.getValue());
+                    cargarTablaySelect();
+                }
+            });
             btnAnadir.setOnAction(event -> {
                 mensajeError.setVisible(false);
                 if (inputTitulo.getText().isBlank()) {
@@ -85,7 +151,8 @@ public class TablaController implements Initializable {
                     else {
                         Double precio = (!inputPrecio.getText().isBlank()) ? Double.parseDouble(inputPrecio.getText()) : 0;
                         registrarJuego(new Juegos(inputTitulo.getText(), inputGenero.getText(), precio, inputFecha.getText()));
-                        mostrarJuegos();
+                        vaciarInputs();
+                        cargarTablaySelect();
                     }
                 }
             });
@@ -101,6 +168,7 @@ public class TablaController implements Initializable {
                     btnRegistrar.setVisible(true);
                     btnAnadir.setVisible(false);
                     btnGuardar.setVisible(true);
+                    btnEliminar.setVisible(true);
                 }
             });
             btnGuardar.setOnAction(event -> {
@@ -111,17 +179,21 @@ public class TablaController implements Initializable {
                 }
                 else {
                     editarJuego(getJuegoSeleccionado().getTitulo(), new Juegos(inputTitulo.getText(), inputGenero.getText(), Double.parseDouble(inputPrecio.getText()), inputFecha.getText()));
-                    mostrarJuegos();
+                    cargarTablaySelect();
+                    mostrarFormRegistrar();
+                }
+            });
+            btnEliminar.setOnAction(event -> {
+                boolean confirmacion = mostrarAlertaEliminar("¿Deseas eliminar el juego " + getJuegoSeleccionado().getTitulo() + "?");
+                if (confirmacion) {
+                    eliminarJuego(getJuegoSeleccionado().getTitulo());
+                    mostrarFormRegistrar();
+                    vaciarInputs();
+                    cargarTablaySelect();
                 }
             });
             btnRegistrar.setOnAction(event -> {
-                tituloFormulario.setText("REGISTRAR JUEGO");
-                inputTitulo.setText("");
-                inputGenero.setText("");
-                inputPrecio.setText("");
-                inputFecha.setText("");
-                btnGuardar.setVisible(false);
-                btnAnadir.setVisible(true);
+                mostrarFormRegistrar();
             });
         }
     }

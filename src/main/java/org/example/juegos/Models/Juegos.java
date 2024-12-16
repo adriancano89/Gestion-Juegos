@@ -1,9 +1,6 @@
 package org.example.juegos.Models;
 
-import com.mongodb.client.FindIterable;
-import com.mongodb.client.MongoCollection;
-import com.mongodb.client.MongoCursor;
-import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.*;
 import com.mongodb.client.model.Filters;
 import org.bson.Document;
 import static com.mongodb.client.model.Filters.eq;
@@ -117,6 +114,46 @@ public class Juegos {
             System.out.println(consultaEditar);
             Document filtro = new Document("titulo", titulo);
             coleccionJuegos.updateOne(filtro, consultaEditar);
+            ConexionBD.getMongoClient().close();
+        } catch (Exception error) {
+            System.out.println(error.getMessage());
+        }
+    }
+
+    public void eliminarJuego(String titulo) {
+        MongoDatabase database = ConexionBD.conexion();
+        try {
+            MongoCollection<Document> coleccionJuegos = database.getCollection("juegos");
+            Document consultaEliminar = new Document("titulo", titulo);
+            coleccionJuegos.deleteOne(consultaEliminar);
+            ConexionBD.getMongoClient().close();
+        } catch (Exception error) {
+            System.out.println(error.getMessage());
+        }
+    }
+
+    public ArrayList<String> obtenerGeneros() {
+        MongoDatabase database = ConexionBD.conexion();
+        ArrayList<String> generos = new ArrayList<>();
+        try {
+            MongoCollection<Document> coleccionJuegos = database.getCollection("juegos");
+            MongoIterable<String> valoresGeneros = coleccionJuegos.distinct("genero", String.class);
+            for (String genero : valoresGeneros) {
+                generos.add(genero);
+            }
+            ConexionBD.getMongoClient().close();
+        } catch (Exception error) {
+            System.out.println(error.getMessage());
+        }
+        return generos;
+    }
+
+    public void eliminarPorGenero(String genero) {
+        MongoDatabase database = ConexionBD.conexion();
+        try {
+            MongoCollection<Document> coleccionJuegos = database.getCollection("juegos");
+            Document consultaEliminar = new Document("genero", genero);
+            coleccionJuegos.deleteMany(consultaEliminar);
             ConexionBD.getMongoClient().close();
         } catch (Exception error) {
             System.out.println(error.getMessage());
