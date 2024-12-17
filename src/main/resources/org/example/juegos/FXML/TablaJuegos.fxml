@@ -15,10 +15,10 @@
    <children>
       <TableView fx:id="tablaJuegos" layoutX="60.0" layoutY="78.0" prefHeight="526.0" prefWidth="674.0">
         <columns>
-          <TableColumn fx:id="columnaTitulo" prefWidth="190.40002822875977" text="Título" />
-          <TableColumn fx:id="columnaGenero" minWidth="0.0" prefWidth="169.59996032714844" text="Género" />
-            <TableColumn fx:id="columnaPrecio" prefWidth="129.5999755859375" text="Precio" />
-            <TableColumn fx:id="columnaFecha" prefWidth="193.60003662109375" text="Fecha de lanzamiento" />
+          <TableColumn fx:id="columnaTitulo" prefWidth="190.40002822875977" styleClass="columnaCentrada" text="Título" />
+          <TableColumn fx:id="columnaGenero" minWidth="0.0" prefWidth="169.59996032714844" styleClass="columnaCentrada" text="Género" />
+            <TableColumn fx:id="columnaPrecio" prefWidth="129.5999755859375" styleClass="columnaCentrada" text="Precio" />
+            <TableColumn fx:id="columnaFecha" prefWidth="183.19998779296873" styleClass="columnaCentrada" text="Fecha de lanzamiento" />
         </columns>
       </TableView>
       <Button fx:id="btnRegistrar" layoutX="893.0" layoutY="84.0" mnemonicParsing="false" styleClass="cursorPointer" text="REGISTRAR NUEVO JUEGO" visible="false" />
@@ -55,11 +55,6 @@
             <Button fx:id="btnAnadir" mnemonicParsing="false" style="-fx-padding: 5px 10px;" styleClass="cursorPointer" text="AÑADIR" />
             <Button fx:id="btnGuardar" mnemonicParsing="false" styleClass="cursorPointer" text="GUARDAR" visible="false" />
             <Button fx:id="btnEliminar" mnemonicParsing="false" styleClass="cursorPointer" text="ELIMINAR" visible="false" />
-            <Text fx:id="mensajeError" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-fill: red; -fx-font-size: 15px; -fx-font-weight: bold; -fx-text-alignment: center;" visible="false" wrappingWidth="200.0">
-               <VBox.margin>
-                  <Insets top="10.0" />
-               </VBox.margin>
-            </Text>
          </children>
       </VBox>
       <ChoiceBox fx:id="selectGenero" layoutX="593.0" layoutY="26.0" prefHeight="26.0" prefWidth="140.0" styleClass="cursorPointer" />

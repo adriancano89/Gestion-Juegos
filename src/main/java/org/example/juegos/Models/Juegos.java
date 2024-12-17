@@ -152,6 +152,9 @@ public class Juegos {
         MongoDatabase database = ConexionBD.conexion();
         try {
             MongoCollection<Document> coleccionJuegos = database.getCollection("juegos");
+            if (genero.equals("Sin género")) {
+                genero = "";
+            }
             Document consultaEliminar = new Document("genero", genero);
             coleccionJuegos.deleteMany(consultaEliminar);
             ConexionBD.getMongoClient().close();

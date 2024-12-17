@@ -37,7 +37,6 @@ public class TablaController implements Initializable {
     @FXML private Button btnAnadir;
     @FXML private Button btnGuardar;
     @FXML private Button btnEliminar;
-    @FXML private Text mensajeError;
 
     public static Juegos getJuegoSeleccionado() {
         return juegoSeleccionado;
@@ -75,6 +74,9 @@ public class TablaController implements Initializable {
         selectGenero.setValue("Eliminar por género");
         btnEliminarGenero.setVisible(false);
         ArrayList<String> generos = modeloJuegos.obtenerGeneros();
+        if (generos.contains("")) {
+            generos.set(generos.indexOf(""), "Sin género");
+        }
         ObservableList<String> camposSelect = FXCollections.observableList(generos);
         selectGenero.setItems(camposSelect);
     }
@@ -104,6 +106,13 @@ public class TablaController implements Initializable {
         mostrarOpcionesSelect();
     }
 
+    public void mostrarAlertaError(String mensaje) {
+        Alert alertaError = new Alert(Alert.AlertType.WARNING);
+        alertaError.setHeaderText("Atención");
+        alertaError.setContentText(mensaje);
+        alertaError.showAndWait();
+    }
+
     public boolean mostrarAlertaEliminar(String mensaje) {
         Alert alertaEliminar = new Alert(Alert.AlertType.CONFIRMATION);
         alertaEliminar.setTitle("Eliminación");
@@ -124,7 +133,7 @@ public class TablaController implements Initializable {
             });
             btnEliminarGenero.setOnAction(event -> {
                 String mensaje;
-                if (selectGenero.getValue().isBlank()) {
+                if (selectGenero.getValue().equals("Sin género")) {
                     mensaje = "¿Deseas eliminar todos los juegos que no tienen género?";
                 }
                 else {
@@ -137,16 +146,13 @@ public class TablaController implements Initializable {
                 }
             });
             btnAnadir.setOnAction(event -> {
-                mensajeError.setVisible(false);
                 if (inputTitulo.getText().isBlank()) {
-                    mensajeError.setText("El título no puede estar vacío");
-                    mensajeError.setVisible(true);
+                    mostrarAlertaError("El título no puede estar vacío");
                 }
                 else {
                     long numCoincidencias = modeloJuegos.comprobarTitulo(inputTitulo.getText());
                     if (numCoincidencias > 0) {
-                        mensajeError.setText("No puede haber dos juegos con el mismo título.");
-                        mensajeError.setVisible(true);
+                        mostrarAlertaError("No puede haber dos juegos con el mismo nombre.\nIntroduce otro diferente.");
                     }
                     else {
                         Double precio = (!inputPrecio.getText().isBlank()) ? Double.parseDouble(inputPrecio.getText()) : 0;
@@ -172,10 +178,8 @@ public class TablaController implements Initializable {
                 }
             });
             btnGuardar.setOnAction(event -> {
-                mensajeError.setVisible(false);
                 if (inputTitulo.getText().isBlank()) {
-                    mensajeError.setText("El título no puede estar vacío");
-                    mensajeError.setVisible(true);
+                    mostrarAlertaError("El título no puede estar vacío");
                 }
                 else {
                     editarJuego(getJuegoSeleccionado().getTitulo(), new Juegos(inputTitulo.getText(), inputGenero.getText(), Double.parseDouble(inputPrecio.getText()), inputFecha.getText()));

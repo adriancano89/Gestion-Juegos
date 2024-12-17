@@ -5,3 +5,7 @@
 .cursorPointer {
     -fx-cursor: hand;
 }
+
+.columnaCentrada {
+    -fx-alignment: center;
+}

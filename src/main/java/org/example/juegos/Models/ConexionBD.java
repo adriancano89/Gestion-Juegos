@@ -22,7 +22,6 @@ public class ConexionBD {
         try {
             mongoClient = MongoClients.create(host);
             database = mongoClient.getDatabase("adrian");
-            System.out.println("Estás conectado");
         } catch (Exception error) {
             System.out.println(error.getMessage());
         }
